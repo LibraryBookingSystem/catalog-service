@@ -1,0 +1,17 @@
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\aspect\LoggingAspect.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\CatalogServiceApplication.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\config\RabbitMQConfig.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\controller\ResourceController.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\dto\CreateResourceRequest.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\dto\ResourceResponse.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\dto\UpdateResourceRequest.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\entity\Resource.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\entity\ResourceStatus.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\entity\ResourceType.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\exception\GlobalExceptionHandler.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\exception\ResourceAlreadyExistsException.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\exception\ResourceNotFoundException.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\repository\ResourceRepository.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\security\SecurityConfig.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\service\ResourceEventPublisher.java
+C:\Users\saifh\Desktop\AspectProject\library-system\catalog-service\src\main\java\com\library\catalog_service\service\ResourceService.java
