@@ -1,5 +1,6 @@
 package com.library.catalog_service.exception;
 
+import com.library.common.exception.ForbiddenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,16 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Global exception handler for the catalog service
+ * Exception handler for Catalog Service.
+ * Extends common GlobalExceptionHandler.
  */
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends com.library.common.exception.GlobalExceptionHandler {
     
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     
-    /**
-     * Handle resource not found exceptions
-     */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
         logger.error("Resource not found: {}", ex.getMessage());
@@ -35,9 +34,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
     
-    /**
-     * Handle resource already exists exceptions
-     */
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleResourceAlreadyExistsException(ResourceAlreadyExistsException ex) {
         logger.error("Resource already exists: {}", ex.getMessage());
@@ -49,9 +45,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
     
-    /**
-     * Handle validation errors
-     */
+    @Override
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Map<String, String>> handleForbiddenException(ForbiddenException ex) {
+        return super.handleForbiddenException(ex);
+    }
+    
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -69,23 +68,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
     
-    /**
-     * Handle all other exceptions
-     */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex) {
-        logger.error("Unexpected error: ", ex);
-        ErrorResponse error = new ErrorResponse(
-            HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            "An unexpected error occurred",
-            LocalDateTime.now()
-        );
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-    
-    /**
-     * Error response DTO
-     */
     public static class ErrorResponse {
         private int status;
         private String message;
@@ -102,7 +84,3 @@ public class GlobalExceptionHandler {
         public LocalDateTime getTimestamp() { return timestamp; }
     }
 }
-
-
-
-

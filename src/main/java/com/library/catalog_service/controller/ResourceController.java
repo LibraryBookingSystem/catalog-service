@@ -5,6 +5,7 @@ import com.library.catalog_service.dto.ResourceResponse;
 import com.library.catalog_service.dto.UpdateResourceRequest;
 import com.library.catalog_service.entity.ResourceStatus;
 import com.library.catalog_service.entity.ResourceType;
+import com.library.common.security.annotation.RequiresRole;
 import com.library.catalog_service.service.ResourceService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 
 /**
  * Controller for resource management endpoints
+ * Uses AOP annotations for RBAC authorization
  */
 @RestController
 @RequestMapping("/api/resources")
@@ -29,8 +31,10 @@ public class ResourceController {
     /**
      * Create a new resource
      * POST /api/resources
+     * Authorization: ADMIN only
      */
     @PostMapping
+    @RequiresRole({"ADMIN"})
     public ResponseEntity<ResourceResponse> createResource(@Valid @RequestBody CreateResourceRequest request) {
         ResourceResponse response = resourceService.createResource(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -39,8 +43,10 @@ public class ResourceController {
     /**
      * Get resource by ID
      * GET /api/resources/{id}
+     * Authorization: AUTHENTICATED
      */
     @GetMapping("/{id}")
+    @RequiresRole
     public ResponseEntity<ResourceResponse> getResourceById(@PathVariable Long id) {
         ResourceResponse response = resourceService.getResourceById(id);
         return ResponseEntity.ok(response);
@@ -49,8 +55,10 @@ public class ResourceController {
     /**
      * Get all resources
      * GET /api/resources
+     * Authorization: AUTHENTICATED
      */
     @GetMapping
+    @RequiresRole
     public ResponseEntity<List<ResourceResponse>> getAllResources(
             @RequestParam(required = false) ResourceType type,
             @RequestParam(required = false) Integer floor,
@@ -85,8 +93,10 @@ public class ResourceController {
     /**
      * Update resource
      * PUT /api/resources/{id}
+     * Authorization: ADMIN only
      */
     @PutMapping("/{id}")
+    @RequiresRole({"ADMIN"})
     public ResponseEntity<ResourceResponse> updateResource(
             @PathVariable Long id,
             @Valid @RequestBody UpdateResourceRequest request) {
@@ -97,8 +107,10 @@ public class ResourceController {
     /**
      * Delete resource
      * DELETE /api/resources/{id}
+     * Authorization: ADMIN only
      */
     @DeleteMapping("/{id}")
+    @RequiresRole({"ADMIN"})
     public ResponseEntity<Void> deleteResource(@PathVariable Long id) {
         resourceService.deleteResource(id);
         return ResponseEntity.noContent().build();
@@ -107,12 +119,14 @@ public class ResourceController {
     /**
      * Health check endpoint
      * GET /api/resources/health
+     * Authorization: PUBLIC
      */
     @GetMapping("/health")
     public ResponseEntity<String> health() {
         return ResponseEntity.ok("Catalog Service is running!");
     }
 }
+
 
 
 
