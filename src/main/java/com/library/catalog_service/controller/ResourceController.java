@@ -21,64 +21,62 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/resources")
 public class ResourceController {
-    
+
     private final ResourceService resourceService;
-    
+
     public ResourceController(ResourceService resourceService) {
         this.resourceService = resourceService;
     }
-    
+
     /**
      * Create a new resource
      * POST /api/resources
      * Authorization: ADMIN only
      */
     @PostMapping
-    @RequiresRole({"ADMIN"})
+    @RequiresRole({ "ADMIN" })
     public ResponseEntity<ResourceResponse> createResource(@Valid @RequestBody CreateResourceRequest request) {
         ResourceResponse response = resourceService.createResource(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-    
+
     /**
      * Get resource by ID
      * GET /api/resources/{id}
      * Authorization: AUTHENTICATED
      */
     @GetMapping("/{id}")
-    @RequiresRole
     public ResponseEntity<ResourceResponse> getResourceById(@PathVariable Long id) {
         ResourceResponse response = resourceService.getResourceById(id);
         return ResponseEntity.ok(response);
     }
-    
+
     /**
      * Get all resources
      * GET /api/resources
      * Authorization: AUTHENTICATED
      */
     @GetMapping
-    @RequiresRole
     public ResponseEntity<List<ResourceResponse>> getAllResources(
             @RequestParam(required = false) ResourceType type,
             @RequestParam(required = false) Integer floor,
             @RequestParam(required = false) ResourceStatus status,
             @RequestParam(required = false) String search) {
-        
+
         List<ResourceResponse> resources;
-        
+
         if (search != null && !search.isBlank()) {
             resources = resourceService.searchResourcesByName(search);
         } else if (type != null && status != null) {
             resources = resourceService.getResourcesByType(type).stream()
-                .filter(r -> r.getStatus() == status)
-                .toList();
+                    .filter(r -> r.getStatus() == status)
+                    .toList();
         } else if (type != null) {
             resources = resourceService.getResourcesByType(type);
         } else if (floor != null && status != null) {
             resources = resourceService.getResourcesByFloor(floor).stream()
-                .filter(r -> r.getStatus() == status)
-                .toList();
+                    .filter(r -> r.getStatus() == status)
+                    .toList();
         } else if (floor != null) {
             resources = resourceService.getResourcesByFloor(floor);
         } else if (status != null) {
@@ -86,36 +84,36 @@ public class ResourceController {
         } else {
             resources = resourceService.getAllResources();
         }
-        
+
         return ResponseEntity.ok(resources);
     }
-    
+
     /**
      * Update resource
      * PUT /api/resources/{id}
      * Authorization: ADMIN only
      */
     @PutMapping("/{id}")
-    @RequiresRole({"ADMIN"})
+    @RequiresRole({ "ADMIN" })
     public ResponseEntity<ResourceResponse> updateResource(
             @PathVariable Long id,
             @Valid @RequestBody UpdateResourceRequest request) {
         ResourceResponse response = resourceService.updateResource(id, request);
         return ResponseEntity.ok(response);
     }
-    
+
     /**
      * Delete resource
      * DELETE /api/resources/{id}
      * Authorization: ADMIN only
      */
     @DeleteMapping("/{id}")
-    @RequiresRole({"ADMIN"})
+    @RequiresRole({ "ADMIN" })
     public ResponseEntity<Void> deleteResource(@PathVariable Long id) {
         resourceService.deleteResource(id);
         return ResponseEntity.noContent().build();
     }
-    
+
     /**
      * Health check endpoint
      * GET /api/resources/health
@@ -126,8 +124,3 @@ public class ResourceController {
         return ResponseEntity.ok("Catalog Service is running!");
     }
 }
-
-
-
-
-
