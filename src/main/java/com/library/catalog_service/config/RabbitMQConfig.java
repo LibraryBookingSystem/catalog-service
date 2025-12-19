@@ -16,6 +16,7 @@ public class RabbitMQConfig {
     
     // Exchange names
     public static final String RESOURCE_EXCHANGE = "resource.events";
+    public static final String AUDIT_EXCHANGE = "audit.events";
     
     // Queue names
     public static final String RESOURCE_CREATED_QUEUE = "resource.created";
@@ -28,11 +29,16 @@ public class RabbitMQConfig {
     public static final String RESOURCE_DELETED_ROUTING_KEY = "resource.deleted";
     
     /**
-     * Create topic exchange for resource events
+     * Create topic exchanges
      */
     @Bean
     public TopicExchange resourceExchange() {
         return new TopicExchange(RESOURCE_EXCHANGE);
+    }
+    
+    @Bean
+    public TopicExchange auditExchange() {
+        return new TopicExchange(AUDIT_EXCHANGE, true, false);
     }
     
     /**
