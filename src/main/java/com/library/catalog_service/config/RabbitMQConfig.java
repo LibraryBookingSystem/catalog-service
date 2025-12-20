@@ -27,6 +27,7 @@ public class RabbitMQConfig {
     // Queue names for listening to booking events (consumed by catalog-service)
     public static final String CATALOG_BOOKING_CREATED_QUEUE = "catalog.booking.created";
     public static final String CATALOG_BOOKING_CANCELED_QUEUE = "catalog.booking.canceled";
+    public static final String CATALOG_BOOKING_COMPLETED_QUEUE = "catalog.booking.completed";
 
     // Routing keys for resources
     public static final String RESOURCE_CREATED_ROUTING_KEY = "resource.created";
@@ -36,6 +37,7 @@ public class RabbitMQConfig {
     // Routing keys for booking events
     public static final String BOOKING_CREATED_ROUTING_KEY = "booking.created";
     public static final String BOOKING_CANCELED_ROUTING_KEY = "booking.canceled";
+    public static final String BOOKING_COMPLETED_ROUTING_KEY = "booking.completed";
 
     /**
      * Create topic exchanges
@@ -126,6 +128,14 @@ public class RabbitMQConfig {
     }
 
     /**
+     * Create queue for catalog service to receive booking completed events
+     */
+    @Bean
+    public Queue catalogBookingCompletedQueue() {
+        return new Queue(CATALOG_BOOKING_COMPLETED_QUEUE, true);
+    }
+
+    /**
      * Bind booking created queue to booking exchange (exchange is created by
      * booking-service)
      */
@@ -147,6 +157,18 @@ public class RabbitMQConfig {
                 .bind(catalogBookingCanceledQueue())
                 .to(new TopicExchange(BOOKING_EXCHANGE))
                 .with(BOOKING_CANCELED_ROUTING_KEY);
+    }
+
+    /**
+     * Bind booking completed queue to booking exchange (exchange is created by
+     * booking-service)
+     */
+    @Bean
+    public Binding catalogBookingCompletedBinding() {
+        return BindingBuilder
+                .bind(catalogBookingCompletedQueue())
+                .to(new TopicExchange(BOOKING_EXCHANGE))
+                .with(BOOKING_COMPLETED_ROUTING_KEY);
     }
 
     /**

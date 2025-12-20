@@ -60,4 +60,25 @@ public class BookingEventListener {
             logger.error("Error processing booking.canceled event: {}", e.getMessage(), e);
         }
     }
+
+    /**
+     * Handle booking completed event.
+     * When a booking is completed (endTime has passed), free the resource.
+     * Note: The booking service checks for other active bookings before publishing this event,
+     * so we can safely mark the resource as AVAILABLE.
+     */
+    @RabbitListener(queues = RabbitMQConfig.CATALOG_BOOKING_COMPLETED_QUEUE)
+    public void handleBookingCompleted(BookingEventDTO booking) {
+        try {
+            logger.info("Received booking.completed event: {}", booking);
+            if (booking.getResourceId() != null) {
+                // Mark resource as available since booking has ended
+                // The booking service ensures no other active bookings exist before publishing this event
+                resourceService.updateResourceStatus(booking.getResourceId(), ResourceStatus.AVAILABLE);
+                logger.info("Updated resource {} status to AVAILABLE (booking completed)", booking.getResourceId());
+            }
+        } catch (Exception e) {
+            logger.error("Error processing booking.completed event: {}", e.getMessage(), e);
+        }
+    }
 }
